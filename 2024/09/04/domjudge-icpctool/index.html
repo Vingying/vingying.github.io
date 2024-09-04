@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>关于搭建 domjudge 还有其他一些 ICPC Tool 之类的事 | Vingying&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="（最新更新：2024.06.18） 刚好上周四川省赛打完，决定把这篇很久没更新的文档再更新一下。 先总结一下做了哪些：  DOMjudge 8.2.3, Judgehost，使用 nginx 做反代 ICPC Tools，包括： Presentation Resolver（滚榜）   代码打印与气球小票机配置  总的来说已经够用了，还剩自动登录锁屏、submit client、ICPC Live">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于搭建 domjudge 还有其他一些 ICPC Tool 之类的事">
+<meta property="og:url" content="https://vingying.github.io/2024/09/04/domjudge-icpctool/index.html">
+<meta property="og:site_name" content="Vingying&#39;s Blog">
+<meta property="og:description" content="（最新更新：2024.06.18） 刚好上周四川省赛打完，决定把这篇很久没更新的文档再更新一下。 先总结一下做了哪些：  DOMjudge 8.2.3, Judgehost，使用 nginx 做反代 ICPC Tools，包括： Presentation Resolver（滚榜）   代码打印与气球小票机配置  总的来说已经够用了，还剩自动登录锁屏、submit client、ICPC Live">
+<meta property="og:locale">
+<meta property="og:image" content="http://reimu.red/wp-content/uploads/2021/06/90184062_p0.png">
+<meta property="og:image" content="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_f1fadbc1883d223f233d4b686360dde8.jpg">
+<meta property="og:image" content="http://reimu.red/wp-content/uploads/2022/11/wp_editor_md_665fe686ea78a6bafe276c284182ddc7.jpg">
+<meta property="og:image" content="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_e57a9832327e3eea0fc036a462be8974.jpg">
+<meta property="og:image" content="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_f0e95d659a78666ca0713d26e75a5e11.jpg">
+<meta property="og:image" content="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_a2e88a3f02740b3e15983584bbdcf7e6.jpg">
+<meta property="og:image" content="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_2cd47a9557933644b438b26f4f25cf89.jpg">
+<meta property="og:image" content="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_9cfc4d91ddc4e5ba8b270f2996c03a05.jpg">
+<meta property="og:image" content="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_e0eccb7c4bdb0b8eed7f8652a87016ab.jpg">
+<meta property="og:image" content="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_a472998052e5216283d68abb5f0b0662.jpg">
+<meta property="og:image" content="http://reimu.red/wp-content/uploads/2024/06/wp_editor_md_3e4631f0e18381ee000c1e4d347e9834.jpg">
+<meta property="article:published_time" content="2024-09-04T09:34:06.000Z">
+<meta property="article:modified_time" content="2024-09-04T09:36:53.185Z">
+<meta property="article:author" content="Vingying">
+<meta property="article:tag" content="XCPC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://reimu.red/wp-content/uploads/2021/06/90184062_p0.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Vingying's Blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Vingying&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://vingying.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-domjudge-icpctool" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/09/04/domjudge-icpctool/" class="article-date">
+  <time class="dt-published" datetime="2024-09-04T09:34:06.000Z" itemprop="datePublished">2024-09-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%AB%9E%E8%B5%9B/">竞赛</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      关于搭建 domjudge 还有其他一些 ICPC Tool 之类的事
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>（最新更新：2024.06.18）</p>
+<p>刚好上周四川省赛打完，决定把这篇很久没更新的文档再更新一下。</p>
+<p>先总结一下做了哪些：</p>
+<ul>
+<li>DOMjudge 8.2.3, Judgehost，使用 nginx 做反代</li>
+<li>ICPC Tools，包括：<ul>
+<li>Presentation</li>
+<li>Resolver（滚榜）</li>
+</ul>
+</li>
+<li>代码打印与气球小票机配置</li>
+</ul>
+<p>总的来说已经够用了，还剩自动登录锁屏、submit client、ICPC Live 等等还没配置。</p>
+<p>搭建环境：<br>DOMserver: Ubuntu 22.04(64) Version: <a target="_blank" rel="noopener" href="https://www.domjudge.org/releases/domjudge-8.2.3.tar.gz">8.2.3</a><br>Judgehost: Ubuntu 22.04(64) Version: 8.2.3（下面拉的 docker 镜像，注意只有 amd64 的，没有 arm）<br>CDS: Ubuntu 22.04(64) Version: <a target="_blank" rel="noopener" href="https://github.com/icpctools/icpctools/releases/download/v2.5.940/wlp.CDS-2.5.940.zip">2.5.940</a><br>Presentation Clients: win11(64) Version:  <a target="_blank" rel="noopener" href="https://github.com/icpctools/icpctools/releases/download/v2.5.940/presentations-2.5.940.zip">2.5.940</a><br>Presentation Admin: win10(64) Version: <a target="_blank" rel="noopener" href="https://github.com/icpctools/icpctools/releases/download/v2.5.940/presentationAdmin-2.5.940.zip">2.5.940</a><br>Resolver: win11(64) Version: <a target="_blank" rel="noopener" href="https://github.com/icpctools/icpctools/releases/download/v2.5.940/resolver-2.5.940.zip">2.5.940</a><br>打印机：HP LaserJet M1136 MFP<br>气球小票机服务：<a target="_blank" rel="noopener" href="https://github.com/hydro-dev/xcpc-tools">https://github.com/hydro-dev/xcpc-tools</a><br>Win11: 需要支持 bash 环境，以及含有 jdk1.11 及以上，这里可以下载 <a target="_blank" rel="noopener" href="https://www.123pan.com/s/94VA-AZEVv">JDK 11.0.15</a></p>
+<p>不推荐用 docker 装 DOMserver，会有打印机识别不上的问题，比较麻烦。</p>
+<p>下面从刚重装完系统开始一步一步搞吧（</p>
+<p><img src="http://reimu.red/wp-content/uploads/2021/06/90184062_p0.png"></p>
+<span id="more"></span>
+
+<h1 id="Domjudge-8-2-3"><a href="#Domjudge-8-2-3" class="headerlink" title="Domjudge 8.2.3"></a>Domjudge 8.2.3</h1><h2 id="环境依赖"><a href="#环境依赖" class="headerlink" title="环境依赖"></a>环境依赖</h2><p>首先，默认已经把该换的源都换好了，就执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get upgrade</span><br></pre></td></tr></table></figure>
+
+<p>接下来配置 nginx+php-fpm 以及数据库相关依赖：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install acl zip unzip mariadb-server nginx \</span><br><span class="line">        php-fpm php-gd php-cli php-intl php-mbstring php-mysql \</span><br><span class="line">        php-curl php-json php-xml php-zip composer ntp</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> apt install make gcc g++ debootstrap libcgroup-dev lsof \</span><br><span class="line">        procps libcurl4-gnutls-dev libjsoncpp-dev libmagic-dev</span><br></pre></td></tr></table></figure>
+
+<p>如果遇到安装过程中输入 Y 还是直接 Abort 的情况，在 install 后面加一个 -y 参数即可。</p>
+<h2 id="编译-DOMjudge-8-2-3"><a href="#编译-DOMjudge-8-2-3" class="headerlink" title="编译 DOMjudge 8.2.3"></a>编译 DOMjudge 8.2.3</h2><p>首先需要创建一个非 root 用户，并且拥有 sudo 权限，执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">useradd -m &lt;username&gt;</span><br><span class="line">passwd &lt;username&gt;</span><br></pre></td></tr></table></figure>
+
+<p>然后输入新用户的密码，之后</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/sudoers</span><br></pre></td></tr></table></figure>
+
+<p>里面 root 这一行下面加上一行，格式同 root 一行，只是 root 改成用户名。<br>下面都用 &lt;username&gt; 表示上面新建的用户名。</p>
+<p>在 &#x2F;home&#x2F;&lt;username&gt;&#x2F; 下面下载 DOMjudge</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://www.domjudge.org/releases/domjudge-8.2.3.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>然后解压并 cd 到解压后的目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf domjudge-8.2.3.tar.gz</span><br><span class="line"><span class="built_in">cd</span> /home/&lt;username&gt;/domjudge-8.2.3/</span><br></pre></td></tr></table></figure>
+
+<p>之后就开始编译，执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ./configure --prefix=/home/&lt;username&gt;/domjudge --with-domjudge-user=root --with-baseurl=127.0.0.1</span><br><span class="line">make domserver &amp;&amp; <span class="built_in">sudo</span> make install-domserver</span><br></pre></td></tr></table></figure>
+
+<p>如果要生成更多文档，执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make docs &amp;&amp; <span class="built_in">sudo</span> make install-docs</span><br></pre></td></tr></table></figure>
+
+<p>但至少我这步失败了 233 好像是因为 python 的问题？所以这一步（指生成文档）失败了也不用管。</p>
+<p>至此也就编译成功啦</p>
+<h2 id="配置数据库"><a href="#配置数据库" class="headerlink" title="配置数据库"></a>配置数据库</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> /home/&lt;username&gt;/domjudge/domserver/bin/dj_setup_database -u root install</span><br></pre></td></tr></table></figure>
+
+<p>如果这一步发现 Access Denied，可以先切换到 root 用户，然后用当前的 socket 来设置数据库，命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> dj_setup_database -s install</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置-Web-服务器"><a href="#配置-Web-服务器" class="headerlink" title="配置 Web 服务器"></a>配置 Web 服务器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home/&lt;username&gt;/domjudge/domserver</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">ln</span> -s /home/&lt;username&gt;/domjudge/domserver/etc/nginx-conf /etc/nginx/sites-enabled/domjudge</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">ln</span> -s /opt/domjudge/domserver/etc/domjudge-fpm.conf /etc/php/7.4/fpm/pool.d/domjudge.conf</span><br><span class="line"><span class="built_in">sudo</span> service php7.4-fpm reload</span><br><span class="line"><span class="built_in">sudo</span> service nginx reload</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chown</span> www-data:www-data -R webapp/var/*</span><br></pre></td></tr></table></figure>
+
+<p>上面配置 php-fpm 时注意一下版本号。最后一行是用于配置该文件夹下的用于上传校徽、队伍照片等文件时的权限设置。</p>
+<p>现在，内网的话就可以访问 <a target="_blank" rel="noopener" href="http://127.0.0.1/domjudge">http://127.0.0.1/domjudge</a> 然后就看到如下类似界面<br><a target="_blank" rel="noopener" href="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_f1fadbc1883d223f233d4b686360dde8.jpg"><img src="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_f1fadbc1883d223f233d4b686360dde8.jpg"></a><br>（上面的图是 domjudge 7.3.4 版本的界面，新版界面有些许变化）</p>
+<p>此时可以用用户名 admin 和</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/home/<span class="tag">&lt;<span class="name">username</span>&gt;</span>/domjudge/domserver/etc/initial_admin_password.secret</span><br></pre></td></tr></table></figure>
+
+<p>内的密码来登录管理后台了。</p>
+<p>如果是第三方服务器，比如阿里云啥的，要用公网 ip 访问的话检查一下有没有开放 80 端口。</p>
+<h2 id="配置-MySQL"><a href="#配置-MySQL" class="headerlink" title="配置 MySQL"></a>配置 MySQL</h2><p>执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/mysql/conf.d/mysql.cnf</span><br></pre></td></tr></table></figure>
+
+<p>然后里面覆盖为下面内容</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[mysqld]</span><br><span class="line">max_connections <span class="operator">=</span> <span class="number">1000</span></span><br><span class="line">max_allowed_packet <span class="operator">=</span> <span class="number">16</span>MB</span><br><span class="line">innodb_log_file_size <span class="operator">=</span> <span class="number">48</span>MB</span><br></pre></td></tr></table></figure>
+
+<p>其中 max_allowed_packet 数值改成两倍于题目测试数据文件的大小，innodb_log_file_size 数值改成十倍于题目测试数据文件的大小。</p>
+<p>若使用的是 mariadb，则 &#x2F;etc&#x2F;mysql&#x2F;mariadb.conf.d&#x2F;50-server.cnf 中 max_allowed_packet 一项也需要修改。</p>
+<p>之后重启数据库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart mysql</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置-Nginx"><a href="#配置-Nginx" class="headerlink" title="配置 Nginx"></a>配置 Nginx</h2><p>去 <code>/etc/php/php版本号/cli/php.ini</code> 里，需要修改的东西都在 DOMjudge 后台管理里面有个 Config checker 的东西，位置如下</p>
+<p><a target="_blank" rel="noopener" href="http://reimu.red/wp-content/uploads/2022/11/wp_editor_md_665fe686ea78a6bafe276c284182ddc7.jpg"><img src="http://reimu.red/wp-content/uploads/2022/11/wp_editor_md_665fe686ea78a6bafe276c284182ddc7.jpg"></a></p>
+<p>根据里面的东西来改即可。</p>
+<hr>
+<p>至此，DOMserver 的配置全部完毕！更多内容可以参考 <a target="_blank" rel="noopener" href="https://github.com/cn-xcpc-tools/cn-xcpc-docs/blob/master/domserver.md">https://github.com/cn-xcpc-tools/cn-xcpc-docs/blob/master/domserver.md</a></p>
+<h1 id="Judgehost-docker"><a href="#Judgehost-docker" class="headerlink" title="Judgehost (docker)"></a>Judgehost (docker)</h1><p>表示实在受不了不用 docker 直接嗯搭的折磨了……所以 Judgehost 就直接用 docker 搭算了（</p>
+<p>由于国内的 docker 镜像都挂了，所以需要事先在服务器上挂好梯子，才能比较顺畅地拉取镜像。如果不想配置 docker 的话，可以参照 <a target="_blank" rel="noopener" href="https://github.com/cn-xcpc-tools/cn-xcpc-docs/blob/master/judgehost.md">https://github.com/cn-xcpc-tools/cn-xcpc-docs/blob/master/judgehost.md</a></p>
+<h2 id="下载-docker"><a href="#下载-docker" class="headerlink" title="下载 docker"></a>下载 docker</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL https://get.docker.com | sh</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置-cgroups"><a href="#设置-cgroups" class="headerlink" title="设置 cgroups"></a>设置 cgroups</h2><p>然后需要设置本机 cgroups，编辑 &#x2F;etc&#x2F;default&#x2F;grub 文件，将下面这行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GRUB_CMDLINE_LINUX_DEFAULT=<span class="string">&quot;&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>修改为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GRUB_CMDLINE_LINUX_DEFAULT=<span class="string">&quot;quiet cgroup_enable=memory swapaccount=1&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>之后执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">update-grub</span><br></pre></td></tr></table></figure>
+
+<p>然后再重启机子即可，之后检查下 &#x2F;proc&#x2F;cmdline 里面有无对应 log，有的话就好耶~<br>如果没有的话，有些机子可能会被 &#x2F;etc&#x2F;default&#x2F;grub.d&#x2F; 里面的东西覆盖，在 update-grub 可以看到 Sourcing 了哪些文件，都检查一下，凡是有 GRUB_CMDLINE_LINUX_DEFAULT 的地方都改一下即可。</p>
+<p>注意上面更改的 grub 内容在不同机器上可能不同，到时候拉取镜像时启动会报错。报错信息包含了 grub 需要追加的内容，根据这上面的提示修改然后重启机器即可。</p>
+<h2 id="运行-Judgehost"><a href="#运行-Judgehost" class="headerlink" title="运行 Judgehost"></a>运行 Judgehost</h2><p>接下来就是直接在 docker 里面运行 Judgehost。命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -it --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name judgehost-0 --hostname judgedaemon-0 -e DAEMON_ID=0 -e CONTAINER_TIMEZONE=Asia/Shanghai -e JUDGEDAEMON_PASSWORD=&lt;domserver password&gt; -e DOMSERVER_BASEURL=&lt;domjudge url&gt; domjudge/judgehost:8.1.3</span><br></pre></td></tr></table></figure>
+
+<p>其中 domserver password 是在</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/home/<span class="tag">&lt;<span class="name">username</span>&gt;</span>/domjudge/domserver/etc/restapi.secret</span><br></pre></td></tr></table></figure>
+
+<p>里面，domjudge url 就是 domserver 对应的地址，最后要加个 &#x2F; 符号。</p>
+<p>如果要配置多台 Judgehost，就把上面 DAEMON_ID&#x3D;0 judgehost-0, judgedaemon-0, 对应编号一起改了，依次递增即可。如果一台机子 CPU 是多核（物理核）的话，核心编号就是 DAEMON_ID，从 0 开始编号。</p>
+<p>这里建议一个物理核只开一个 judgehost。数量的话不要太多也不要太少，用四川省赛作参考：一共 254 个队伍，开了六个 judgehost，全程评测没有压力，结束前几分钟的压力也很顺畅。</p>
+<p>然后在 domjudge 后台管理界面就应该看得到几个 Judgehost 了，像这样<br><a target="_blank" rel="noopener" href="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_e57a9832327e3eea0fc036a462be8974.jpg"><img src="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_e57a9832327e3eea0fc036a462be8974.jpg"></a><br>好，终于把这杀千刀的 Judgehost 配置好了（</p>
+<h1 id="配置打印机"><a href="#配置打印机" class="headerlink" title="配置打印机"></a>配置打印机</h1><p>不同的打印机配置不一样，也有即插即用的，而惠普的打印机大多数要自己手动配置一些东西，下面就介绍一下惠普打印机的配置。</p>
+<p>通过 USB 连接上打印机之后，执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install hplip</span><br></pre></td></tr></table></figure>
+
+<p>除了与 root 用户有关的那个选项注意一下其他一路默认即可。</p>
+<p>之后再安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install hplip-gui</span><br></pre></td></tr></table></figure>
+
+<p>之后在打印机连接的情况下再安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> hp-plugins</span><br></pre></td></tr></table></figure>
+
+<p>之后执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> hp-setup</span><br></pre></td></tr></table></figure>
+
+<p>如果没有图形的界面的话，执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> hp-setup -i</span><br></pre></td></tr></table></figure>
+
+<p>然后选择 USB，之后会自动寻找到该打印机，一路安装好即可。</p>
+<p>之后去 DOMjudge 后台，找到 print_command（在 Configuration 啥的地方），里面加上一句</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">enscript -b [username] -a 0-10 -f Courier9 [file] 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+<p>其中 username 就是用户名，0~10 就是每次请求只打印前 10 页。</p>
+<p>为了方便志愿者根据座位号送代码，打印的代码可以附带更多信息。四川省赛使用的打印命令如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">enscript -b <span class="string">&#x27;team: [username] | file: [original] | location: [location]&#x27;</span> -a 0-7 -f Courier9 [file] 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+<p>之后，找个用户来登录，就可以看到上面有个 Print，如图<br><a target="_blank" rel="noopener" href="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_f0e95d659a78666ca0713d26e75a5e11.jpg"><img src="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_f0e95d659a78666ca0713d26e75a5e11.jpg"></a><br>就可以愉快打印啦~</p>
+<p>之后再连接惠普系列的打印机时，就不需要配置上面这些了，即插即用。</p>
+<h1 id="配置气球小票机"><a href="#配置气球小票机" class="headerlink" title="配置气球小票机"></a>配置气球小票机</h1><p>气球小票用以志愿者领取小票之后送气球方便使用。这里使用了 <a target="_blank" rel="noopener" href="https://github.com/hydro-dev/xcpc-tools">https://github.com/hydro-dev/xcpc-tools</a> 这一工具，十分好用，不过官方文档暂时写得不太明确）</p>
+<p>这一步我是在 windows 上配置的，因为当时的气球小票机没有 Linux 对应的驱动程序。首先，去 <a target="_blank" rel="noopener" href="https://github.com/hydro-dev/xcpc-tools/releases">https://github.com/hydro-dev/xcpc-tools/releases</a> 下载 <code>xcpc-tools-bundle.js</code>，然后电脑需要安装 Node.js。</p>
+<p>由于该工具需要将打印内容转换成 pdf，而其识别 pdf 是识别同一目录下是否有 SumatraPDF，所以你需要将该脚本放在与 SumatraPDF 主程序 exe 对应的同一目录下（Linux 据说没有这个神奇问题）。</p>
+<p>首先大致介绍一下该工具的运行方式。首先需要用其启动一个 Server 作为管理后台，然后需要另外启动多个 Client 作为从 Server 端接收数据的服务。</p>
+<p>对于小票机，连上电脑之后需要先将其设置为共享打印机，这样 Server 端才能识别上。</p>
+<p>那么我们首先来启动 Server 服务。执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node ./xcpc-tools-bundle.js</span><br></pre></td></tr></table></figure>
+
+<p>第一次运行时，该工具会检查你的所有已连接的打印机（其中包括输出 pdf，不过我们不需要）。然后在目录下会生成一个 <code>config.server.yaml</code> 的配置文件。在里面将 type 更改为 domjudge，然后需要设置 server、contestId、username、password 以及 balloon，其中 username 和 password 可以直接使用 domjudge 的 admin 账号，balloon 的配置在第一次运行 Server 时可以看到。这些配置的具体说明可以参考 <a target="_blank" rel="noopener" href="https://github.com/hydro-dev/xcpc-tools">https://github.com/hydro-dev/xcpc-tools</a> 的 README 文件。</p>
+<p>然后再次执行上述命令启动 Server。之后 Server 会在本地 5283 端口（默认）启动 Web 端，包括 Print、Balloon 等。我们只使用了气球服务，故仅需要看 Balloon 相关。</p>
+<p>在 Balloon 界面右边有一个 Add Client 的选项，之后在里面添加一个 Client（名称无所谓），并记下其对应的较短的 Token。这个 Token 用于之后启动 Client 服务。</p>
+<p>接下来启动 Client。执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node ./xcpc-tools-bundle.js --client</span><br></pre></td></tr></table></figure>
+
+<p>第一次运行时，本地会生成一个 <code>config.client.yaml</code> 的配置文件。在里面配置 Server 端对应的 ip 地址，以及上面的 Client Token。</p>
+<p>注意到本地另外还生成了一个 data 文件夹。如果想要更换比赛，首先将 data 文件夹以及上述两个 config 删除之后，再次执行上述的命令即可。</p>
+<h1 id="配置-ICPC-Tools"><a href="#配置-ICPC-Tools" class="headerlink" title="配置 ICPC Tools"></a>配置 ICPC Tools</h1><p>这是个甚么东西？主要就是用来显示一些东西用的，包括 judge queue、scoreboard、大屏倒计时等等，总的来说配好了的话还挺有比赛氛围的（</p>
+<p>这一部分主要参照 <a target="_blank" rel="noopener" href="https://github.com/DOMjudge/domjudge/wiki/Connecting-the-ICPC-Tools-with-DOMjudge">官方文档</a>，但这上面也有一点小错误，这里就整理下吧。</p>
+<h2 id="配置-CDS"><a href="#配置-CDS" class="headerlink" title="配置 CDS"></a>配置 CDS</h2><p>CDS 又叫 Contest Data Server，主要用以比赛后台的一些管理服务，得先配置好这个才能用其他 Tools（Resolver 除外）。</p>
+<p>首先，在 DOMjudge 后台创建一个账号，并且分配其角色为 API reader、API writer、Source code reader，记录下用户名和密码（下面用户名和密码分别称为 usercds 和 usercdspwd）。</p>
+<p>不过其实这一部分建议直接用 admin 账号，防止出现奇奇怪怪的权限问题。</p>
+<p>之后，在需要运行 CDS 的机子上下载并安装 CDS（这个东西占用资源较大，建议把 DOMserver 和 CDS 放一起），<a target="_blank" rel="noopener" href="https://github.com/icpctools/icpctools/releases/download/v2.5.940/wlp.CDS-2.5.940.zip">链接在这里(CDS v2.5.940)</a>。<br>下载好了之后解压，把 wlp 目录重命名为 cds，方便好认些。</p>
+<p>接下来，修改 cds&#x2F;usr&#x2F;servers&#x2F;cds&#x2F;config&#x2F;cdsConfig.xml，里面所有的内容替换成如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">cds</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- Set location= to a directory that the user running the CDS can write to --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">contest</span> <span class="attr">location</span>=<span class="string">&quot;/home/cds/contest-data&quot;</span> <span class="attr">recordReactions</span>=<span class="string">&quot;false&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- Set the url to the URL of your DOMjudge installation, followed by /api/contests/&lt;cid&gt;, where &lt;cid&gt; is your CID or external ID --&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- Set the user and password to the user you created in the previous step --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">ccs</span></span></span><br><span class="line"><span class="tag">            <span class="attr">url</span>=<span class="string">&quot;https://www.domjudge.org/demoweb/api/contests/nwerc18&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">user</span>=<span class="string">&quot;cds&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">password</span>=<span class="string">&quot;somepassword&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">contest</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">cds</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中 location 替换成一个不需要 root 就能访问或者修改的目录（比如</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/home/<span class="tag">&lt;<span class="name">username</span>&gt;</span>/cds/contest-data</span><br></pre></td></tr></table></figure>
+
+<p>），url 就是</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">domjudge</span> <span class="attr">url</span>&gt;</span>/api/contests/<span class="tag">&lt;<span class="name">contest</span> <span class="attr">cid</span>&gt;</span></span><br><span class="line">例如：http://127.0.0.1/domjudge/api/contests/5</span><br></pre></td></tr></table></figure>
+
+<p>，其中 contest cid 就是下面这个<br><a target="_blank" rel="noopener" href="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_a2e88a3f02740b3e15983584bbdcf7e6.jpg"><img src="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_a2e88a3f02740b3e15983584bbdcf7e6.jpg"></a><br>另外还有 user 和 password，分别就对应 usercds 和 usercdspwd（也可以直接用 admin 的账号密码）。</p>
+<p>注意：如果你 domjudge 设置的是使用 external data source，那么这一步需要使用 external ID。</p>
+<p>接下来修改 cds&#x2F;usr&#x2F;servers&#x2F;cds&#x2F;config&#x2F;users.xml，里面的所有用户名<strong>不能修改</strong>，否则会很麻烦，把所有密码修改一下，为了安全（不修改也可以，但不推荐）。</p>
+<p>接下来就可以运行（需要装 java jdk 11 或以上）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cds/bin/server run cds</span><br></pre></td></tr></table></figure>
+
+<p>来启动 CDS 了，关闭的话直接 Ctrl+C 停止服务即可。</p>
+<p>之后，访问</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://&lt;server ip&gt;:8443/</span><br></pre></td></tr></table></figure>
+
+<p>，这里需要保证 8443 端口开放，直接就 ip:8443 即可。忽略 SSL 警告，就会看到如下界面：</p>
+<p><a target="_blank" rel="noopener" href="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_2cd47a9557933644b438b26f4f25cf89.jpg"><img src="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_2cd47a9557933644b438b26f4f25cf89.jpg"></a></p>
+<p>点右上角 login，用 users.xml 里面 admin 的信息来登录。</p>
+<p>至此，CDS 算是弄好啦</p>
+<h2 id="配置-Presentation-Admin"><a href="#配置-Presentation-Admin" class="headerlink" title="配置 Presentation Admin"></a>配置 Presentation Admin</h2><p>这又是个甚么东西？可以看 <a target="_blank" rel="noopener" href="https://tools.icpc.global/docs/PresentationAdmin.pdf">这份文档</a>。总之就是个屏幕显示后台管理工具，可以管理多个 Client 的屏幕显示。</p>
+<p>这个东西可以装在任意一台电脑上，<a target="_blank" rel="noopener" href="https://github.com/icpctools/icpctools/releases/download/v2.5.940/presentationAdmin-2.5.940.zip">点这里下载Presentation Admin v2.5.940</a>，并且据说在 macOS 和 Windows 下更不容易挂？</p>
+<p>我是在 Windows 下弄的，下载解压之后，在 bash 环境下在该目录内运行（没有 bash 可以装个 git）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ICPC_FONT=<span class="string">&quot;DengXian&quot;</span> ./presAdmin.bat https://&lt;server ip&gt;:8443 presAdmin &lt;presAdmin password&gt;</span><br></pre></td></tr></table></figure>
+
+<p>其中 presAdmin 还有其密码见 users.xml，server ip 就是上面说的那个 ip:8443。cid 则是上面所说的 contest cid。（还是要注意 domjudge 是否使用的 external id）</p>
+<p>要记得一定要加个 <code>ICPC_FONT=&quot;DengXian&quot;</code> ，否则可能中文支持有问题。后面 ICPC Tools 所有东西都要加个这个。</p>
+<p>之后，会出现这个界面<br><a target="_blank" rel="noopener" href="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_9cfc4d91ddc4e5ba8b270f2996c03a05.jpg"><img src="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_9cfc4d91ddc4e5ba8b270f2996c03a05.jpg"></a><br>如果一直显示 Disconnected 就重新试一下。</p>
+<h2 id="配置-Presentation-Client"><a href="#配置-Presentation-Client" class="headerlink" title="配置 Presentation Client"></a>配置 Presentation Client</h2><p>上面这张图左边一个 Client 都没有，接下来来配置。</p>
+<p>同样，这一步我还是选择了一台 Windows 来配置的（实测 Linux 下有点问题）。<a target="_blank" rel="noopener" href="https://github.com/icpctools/icpctools/releases/download/v2.5.940/presentations-2.5.940.zip">下载地址Presentation Client v2.5.940</a>，官方文档见 <a target="_blank" rel="noopener" href="https://tools.icpc.global/docs/PresentationClient.pdf">这里</a></p>
+<p>之后解压，还是在 bash 环境下在该目录下运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ICPC_FONT=<span class="string">&quot;Microsoft Yahei&quot;</span> ./client.bat https://&lt;server ip&gt;:8443/api/contests/&lt;cid&gt; presentation &lt;presentation password&gt; --name &lt;client name&gt;</span><br></pre></td></tr></table></figure>
+
+<p>其中 presentation 及密码见 users.xml，最后的 name 是指这台 client 的名称，可以不加。cid 同上面 contest cid。（当然还得注意 domjudge 是否使用的 external id）</p>
+<p>这样执行完之后，会看到整个屏幕都是下面这个</p>
+<p><a target="_blank" rel="noopener" href="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_e0eccb7c4bdb0b8eed7f8652a87016ab.jpg"><img src="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_e0eccb7c4bdb0b8eed7f8652a87016ab.jpg"></a></p>
+<p>以及 Presentation Admin 这边也多了一台 Client</p>
+<p><a target="_blank" rel="noopener" href="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_a472998052e5216283d68abb5f0b0662.jpg"><img src="http://reimu.red/wp-content/uploads/2021/06/wp_editor_md_a472998052e5216283d68abb5f0b0662.jpg"></a></p>
+<p>然后就可以愉快体验辣（</p>
+<p>其他的一个比较有用的参数：<code>--display id</code>，即如果连了多台显示器，用这个来指定显示的显示器编号。通常用于向大屏扩展投放时使用。</p>
+<h2 id="配置-Resolver（滚榜）"><a href="#配置-Resolver（滚榜）" class="headerlink" title="配置 Resolver（滚榜）"></a>配置 Resolver（滚榜）</h2><p>resolver 可以支持 CDP 格式的文件夹，2.5 版本之后支持的 CDP 文件夹格式如下：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── config              // 非必需</span><br><span class="line">│   ├── contest.yaml    // 从domjudge Import/export页面导出即可</span><br><span class="line">│   ├── groups.tsv      // 从domjudge Import/export页面导出即可</span><br><span class="line">│   ├── problemset.yaml</span><br><span class="line">│   └── teams.tsv       // 从domjudge Import/export页面导出即可</span><br><span class="line">├── contest</span><br><span class="line">│   ├── banner.png      // resolver无用，但在cds放置于此就可显示banner</span><br><span class="line">│   └── logo.png        // resolver主页面的图片&amp;无照片队伍的默认照片</span><br><span class="line">├── event-feed.ndjson   // 滚榜数据</span><br><span class="line">├── groups              // Categories照片，但在resolver似乎没起到作用</span><br><span class="line">│   └── 3               // Categories的id</span><br><span class="line">│       └── logo.png</span><br><span class="line">├── organizations       // Affiliations照片，只要某Affiliations的队伍有logo，其他同Affiliations的队伍就都是该logo</span><br><span class="line">│   ├── 3000            // 该Affiliations所对应的任一队伍的icpc id</span><br><span class="line">│   │   └── logo.png</span><br><span class="line">│   ├── 3001</span><br><span class="line">│   │   └── logo.png</span><br><span class="line">│   ├── 3012</span><br><span class="line">│   │   └── logo.png</span><br><span class="line">│   ├── 3017</span><br><span class="line">│   │   ├── country_flag.png    // 照源码里是这样放置的，但在resolver似乎没起到作用</span><br><span class="line">│   │   └── logo.png</span><br><span class="line">│   └── 3187</span><br><span class="line">│       └── logo.png</span><br><span class="line">└── teams               // 队伍照片</span><br><span class="line">    ├── 3000            // 队伍的icpc id</span><br><span class="line">    │   └── photo.png   // 照片名字固定是photo</span><br><span class="line">    ├── 3001</span><br><span class="line">    │   └── photo.png</span><br><span class="line">    ├── 3009</span><br><span class="line">    │   └── photo.png</span><br><span class="line">    └── 3010</span><br><span class="line">        └── photo.png</span><br></pre></td></tr></table></figure>
+
+<p>所以队伍照片等等直接按照上面的格式来就行…… 就只有一个 teams 文件夹带上 event-feed.ndjson 就是最简单的结构了。</p>
+<p>最主要的就是这个 event-feed.ndjson 怎么生成。比赛结束后，首先在 DOMjudge 上 Finalize 这场比赛，之后浏览器访问以下网址：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://&lt;domjudge url&gt;/api/v4/contests/&lt;cid&gt;/event-feed?stream=<span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<p>然后输入 domjudge 的 admin 账号密码，之后会下载下来一个 event-feed 的文件。手动加上 .json 的后缀名，然后打开 awards.json 来读取这个 event-feed.json。读取之后，可以在界面手动设置奖项，然后点右上角的 Save event Feed，如图：</p>
+<p><a target="_blank" rel="noopener" href="http://reimu.red/wp-content/uploads/2024/06/wp_editor_md_3e4631f0e18381ee000c1e4d347e9834.jpg"><img src="http://reimu.red/wp-content/uploads/2024/06/wp_editor_md_3e4631f0e18381ee000c1e4d347e9834.jpg"></a></p>
+<p>之后会保存一个 <code>event-feed.ndjson</code> 的文件，将其放在 cdp 文件夹的根目录下即可。</p>
+<p>之后在 Git Bash 下运行 resolver.bat，并用如下格式来指定对应的 cdp 文件夹：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ICPC_FONT=<span class="string">&quot;DengXian&quot;</span> ./resolver.bat ./cdp/ --fast 0.3</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>--fast</code> 用来指示滚榜速度，后面的小数表示所有时间缩短的倍数，例如 0.5 表示二倍速。如果这场比赛没有 Finalize 的话，上述命令需要在最后加一句 <code>--test</code>。</p>
+<p>如果遇到 java 报 OutOfMemory 则直接修改 resolver.bat 内最后一句命令，将 -Xmx&#x3D;1024m 调大，比如 -Xmx&#x3D;4g 再试试。</p>
+<p>然后就可以愉快滚榜啦，具体操作见<a target="_blank" rel="noopener" href="https://tools.icpc.global/docs/Resolver.pdf">官方文档</a></p>
+<h1 id="References"><a href="#References" class="headerlink" title="References"></a>References</h1><p><a target="_blank" rel="noopener" href="https://github.com/cn-xcpc-tools/cn-xcpc-docs">CN-XCPC-DOCS</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/258024151">计算机 · DOMjudge Docker 配置</a><br><a target="_blank" rel="noopener" href="https://github.com/DOMjudge/domjudge/wiki/Connecting-the-ICPC-Tools-with-DOMjudge">Connecting the ICPC Tools with DOMjudge</a><br><a target="_blank" rel="noopener" href="https://tools.icpc.global/">ICPC Tools</a><br><a target="_blank" rel="noopener" href="https://hub.docker.com/r/domjudge/domserver/">docker hub - domjudge</a><br><a target="_blank" rel="noopener" href="https://www.domjudge.org/docs/manual/8.2">DOMjudge Manual 8.2</a><br><a target="_blank" rel="noopener" href="https://github.com/HeRaNO/ChickenRibs/tree/master/ICPCToy/DOMjudge">ICPCToy - DOMjudge</a><br><a target="_blank" rel="noopener" href="https://github.com/hydro-dev/xcpc-tools">Hydro&#x2F;XCPC-TOOLS</a><br><a target="_blank" rel="noopener" href="https://blog.lanly.vip/article/7">Lanly - 滚榜程序Resolver源码阅读</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://vingying.github.io/2024/09/04/domjudge-icpctool/" data-id="cm0nnzg0200007kuy08e75fa3" data-title="关于搭建 domjudge 还有其他一些 ICPC Tool 之类的事" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/XCPC/" rel="tag">XCPC</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Kategorien</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AB%9E%E8%B5%9B/">竞赛</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/XCPC/" rel="tag">XCPC</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/XCPC/" style="font-size: 10px;">XCPC</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/09/">September 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/09/04/domjudge-icpctool/">关于搭建 domjudge 还有其他一些 ICPC Tool 之类的事</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 Vingying<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

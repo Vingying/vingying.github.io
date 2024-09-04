@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   
   
-  <title>Vingying&#39;s Blog</title>
+  <title>Kategorie: 竞赛 | Vingying&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta property="og:type" content="website">
 <meta property="og:title" content="Vingying&#39;s Blog">
-<meta property="og:url" content="https://vingying.github.io/index.html">
+<meta property="og:url" content="https://vingying.github.io/categories/%E7%AB%9E%E8%B5%9B/index.html">
 <meta property="og:site_name" content="Vingying&#39;s Blog">
 <meta property="og:locale">
 <meta property="article:author" content="Vingying">
@@ -69,70 +69,36 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-domjudge-icpctool" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/09/04/domjudge-icpctool/" class="article-date">
-  <time class="dt-published" datetime="2024-09-04T09:34:06.000Z" itemprop="datePublished">2024-09-04</time>
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2024" class="archive-year">2024</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      <a href="/2024/09/04/domjudge-icpctool/" class="archive-article-date">
+  <time class="dt-published" datetime="2024-09-04T09:34:06.000Z" itemprop="datePublished">Sep 4</time>
 </a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AB%9E%E8%B5%9B/">竞赛</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
+      
   
     <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/09/04/domjudge-icpctool/">关于搭建 domjudge 还有其他一些 ICPC Tool 之类的事</a>
+      <a class="archive-article-title" href="/2024/09/04/domjudge-icpctool/">关于搭建 domjudge 还有其他一些 ICPC Tool 之类的事</a>
     </h1>
   
 
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>（最新更新：2024.06.18）</p>
-<p>刚好上周四川省赛打完，决定把这篇很久没更新的文档再更新一下。</p>
-<p>先总结一下做了哪些：</p>
-<ul>
-<li>DOMjudge 8.2.3, Judgehost，使用 nginx 做反代</li>
-<li>ICPC Tools，包括：<ul>
-<li>Presentation</li>
-<li>Resolver（滚榜）</li>
-</ul>
-</li>
-<li>代码打印与气球小票机配置</li>
-</ul>
-<p>总的来说已经够用了，还剩自动登录锁屏、submit client、ICPC Live 等等还没配置。</p>
-<p>搭建环境：<br>DOMserver: Ubuntu 22.04(64) Version: <a target="_blank" rel="noopener" href="https://www.domjudge.org/releases/domjudge-8.2.3.tar.gz">8.2.3</a><br>Judgehost: Ubuntu 22.04(64) Version: 8.2.3（下面拉的 docker 镜像，注意只有 amd64 的，没有 arm）<br>CDS: Ubuntu 22.04(64) Version: <a target="_blank" rel="noopener" href="https://github.com/icpctools/icpctools/releases/download/v2.5.940/wlp.CDS-2.5.940.zip">2.5.940</a><br>Presentation Clients: win11(64) Version:  <a target="_blank" rel="noopener" href="https://github.com/icpctools/icpctools/releases/download/v2.5.940/presentations-2.5.940.zip">2.5.940</a><br>Presentation Admin: win10(64) Version: <a target="_blank" rel="noopener" href="https://github.com/icpctools/icpctools/releases/download/v2.5.940/presentationAdmin-2.5.940.zip">2.5.940</a><br>Resolver: win11(64) Version: <a target="_blank" rel="noopener" href="https://github.com/icpctools/icpctools/releases/download/v2.5.940/resolver-2.5.940.zip">2.5.940</a><br>打印机：HP LaserJet M1136 MFP<br>气球小票机服务：<a target="_blank" rel="noopener" href="https://github.com/hydro-dev/xcpc-tools">https://github.com/hydro-dev/xcpc-tools</a><br>Win11: 需要支持 bash 环境，以及含有 jdk1.11 及以上，这里可以下载 <a target="_blank" rel="noopener" href="https://www.123pan.com/s/94VA-AZEVv">JDK 11.0.15</a></p>
-<p>不推荐用 docker 装 DOMserver，会有打印机识别不上的问题，比较麻烦。</p>
-<p>下面从刚重装完系统开始一步一步搞吧（</p>
-<p><img src="http://reimu.red/wp-content/uploads/2021/06/90184062_p0.png"></p>
-        
-          <p class="article-more-link">
-            <a href="/2024/09/04/domjudge-icpctool/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://vingying.github.io/2024/09/04/domjudge-icpctool/" data-id="cm0nnzg0200007kuy08e75fa3" data-title="关于搭建 domjudge 还有其他一些 ICPC Tool 之类的事" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/XCPC/" rel="tag">XCPC</a></li></ul>
-
-    </footer>
+    </header>
   </div>
-  
 </article>
-
-
-
+  
+  
+    </div></section>
   
 
 
